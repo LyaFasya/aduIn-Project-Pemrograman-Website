@@ -18,8 +18,8 @@ const requestRoutes = require('./routes/request.route');
 const authRoutes = require('./routes/auth.route'); 
 
 app.use("/reports", reportRoutes);
-app.use('/api/requests', requestRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/requests', requestRoutes);
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
