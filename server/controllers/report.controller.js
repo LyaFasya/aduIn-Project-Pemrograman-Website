@@ -44,6 +44,16 @@ const getAllReports = async (req, res) => {
 
         const reports = await Form.findAll({
             where: condition,
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: Category,
+                    attributes: ["id", "name"],
+                },
+            ],
         });
 
         res.status(200).json({
@@ -129,9 +139,16 @@ const deleteReport = async (req, res) => {
 const updateStatus = async(req, res) => {
     try {
         const { id } = req.params;
-        const { status} = req.body;
+        const { status } = req.body;
 
-        await Form.update(
+        const validStatuses = ['pending', 'process', 'done', 'rejected'];
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({
+                message: `Status tidak valid. Gunakan salah satu: ${validStatuses.join(', ')}`
+            });
+        }
+
+        const [updated] = await Form.update(
             { status },
             {
                 where: {
@@ -140,6 +157,10 @@ const updateStatus = async(req, res) => {
                 },
             }
         );
+
+        if (!updated) {
+            return res.status(404).json({ message: "Laporan tidak ditemukan" });
+        }
 
         const updateReport = await Form.findByPk(id);
 
