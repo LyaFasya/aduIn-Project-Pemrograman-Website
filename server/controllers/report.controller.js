@@ -1,10 +1,24 @@
-const { Form, User, Category } = require("../models");
+const { Form, User, Category, FormsHistory } = require("../models");
+const cloudinaryService = require("../services/cloudinary.service");
 
 //User Operations
 const createReport = async (req, res) => {
     try {
+        const { title, description, location, category_id } = req.body;
+        let imageUrl = null;
+
+        if (req.file) {
+            const uploadResult = await cloudinaryService.uploadImage(req.file, "reports");
+            imageUrl = uploadResult.url;
+        }
+
         const report = await Form.create({
-            ...req.body,
+            user_id: req.user.id,
+            category_id,
+            title,
+            description,
+            location,
+            image_url: imageUrl,
             label: "report",
             status: "pending",
         });

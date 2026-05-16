@@ -2,6 +2,22 @@ const bcrypt = require('bcrypt');
 const { User, Profile } = require('../models');
 const jwt = require('jsonwebtoken');
 
+const generateAccessToken = (user) => {
+  return jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' }
+  );
+};
+
+const generateRefreshToken = (user) => {
+  return jwt.sign(
+    { id: user.id },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: '7d' }
+  );
+};
+
 const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -18,7 +34,7 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || 'user' 
+      role: role || 'user'
     });
 
     await Profile.create({
@@ -28,8 +44,8 @@ const register = async (req, res) => {
       photo: null
     });
 
-    res.status(201).json({ 
-      message: 'Registrasi berhasil! Silakan login.', 
+    res.status(201).json({
+      message: 'Registrasi berhasil! Silakan login.',
       data: {
         id: newUser.id,
         name: newUser.name,
@@ -54,16 +70,61 @@ const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Password salah' });
 
-    const token = jwt.sign(
-      { id: user.id, role: user.role }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: '1d' }
-    );
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
-    res.status(200).json({ message: 'Login berhasil', token });
+    await user.update({ refresh_token: refreshToken });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 hari
+    });
+
+    res.status(200).json({
+      message: 'Login berhasil',
+      accessToken
+    });
   } catch (error) {
     res.status(500).json({ message: 'Terjadi kesalahan server', error: error.message });
   }
 };
 
-module.exports = { register, login };
+const refreshToken = async (req, res) => {
+  try {
+    const token = req.cookies.refreshToken;
+
+    if (!token) return res.status(401).json({ message: 'Refresh token tidak ditemukan' });
+    const user = await User.findOne({ where: { refresh_token: token } });
+    if (!user) return res.status(403).json({ message: 'Refresh token tidak valid' });
+
+    jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+      if (err) return res.status(403).json({ message: 'Refresh token sudah kadaluarsa, silakan login ulang' });
+      const newAccessToken = generateAccessToken(user);
+
+      res.status(200).json({
+        message: 'Access token berhasil diperbarui',
+        accessToken: newAccessToken
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Terjadi kesalahan server', error: error.message });
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    const token = req.cookies.refreshToken;
+    if (!token) return res.status(400).json({ message: 'Refresh token diperlukan' });
+    const user = await User.findOne({ where: { refresh_token: token } });
+    if (!user) return res.status(404).json({ message: 'Refresh token tidak ditemukan' });
+    await user.update({ refresh_token: null });
+    res.clearCookie('refreshToken');
+    res.status(200).json({ message: 'Logout berhasil' });
+  } catch (error) {
+    res.status(500).json({ message: 'Terjadi kesalahan server', error: error.message });
+  }
+};
+
+module.exports = { register, login, refreshToken, logout };

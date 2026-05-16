@@ -3,9 +3,10 @@ const router = express.Router();
 
 const reportController = require("../controllers/report.controller");
 const { verifyToken, verifyAdmin } = require("../middlewares/auth");
+const upload = require("../middlewares/upload");
 
 //User Routes
-router.post("/", reportController.createReport);
+router.post("/", verifyToken, upload.single("image_url"), reportController.createReport);
 
 router.get("/", reportController.getAllReports);
 
