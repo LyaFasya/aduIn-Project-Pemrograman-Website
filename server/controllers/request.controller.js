@@ -29,8 +29,6 @@ const createRequest = async (req, res) => {
   }
 };
 
-// ... (kode getFasilitas dan deleteFasilitas tetap sama seperti sebelumnya)
-
 const getAllRequests = async (req, res) => {
   try {
     let condition = { label: 'request' };
