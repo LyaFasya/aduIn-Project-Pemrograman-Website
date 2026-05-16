@@ -12,8 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const reportRoutes = require("./routes/report.route");
-const requestRoutes = require('./routes/request.routes');
-const authRoutes = require('./routes/auth.routes'); 
+const requestRoutes = require('./routes/request.route');
+const authRoutes = require('./routes/auth.route'); 
 
 app.use("/reports", reportRoutes);
 app.use('/api/requests', requestRoutes);
