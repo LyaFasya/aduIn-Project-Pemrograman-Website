@@ -1,9 +1,24 @@
+const cloudinaryService = require("../services/cloudinary.service");
 const { Form, User, Category } = require("../models");
 
 const createReport = async (req, res) => {
     try {
+        const { title, description, location, category_id } = req.body;
+
+        let imageUrl = null;
+
+        if (req.file) {
+            const uploadResult = await cloudinaryService.uploadImage(req.file, "report");
+            imageUrl = uploadResult.url;
+        }
+
         const report = await Form.create({
-            ...req.body,
+            user_id: req.user.id,
+            category_id,
+            title,
+            description,
+            location,
+            image_url: imageUrl,
             label: "report",
             status: "pending",
         });
@@ -21,20 +36,14 @@ const createReport = async (req, res) => {
 
 const getAllReports = async (req, res) => {
     try {
+        let condition = { label: "report" };
+
+        if (req.user && req.user.role !== "admin"){
+            condition.user_id = req.user.id;
+        }
+
         const reports = await Form.findAll({
-            where: {
-                label: "report",
-            },
-            include: [
-                {
-                    model: User,
-                    attributes: ["id", "name", "email"],
-                },
-                {
-                    model: Category,
-                    attributes: ["id", "name"],
-                },
-            ],
+            where: condition,
         });
 
         res.status(200).json({
@@ -88,12 +97,24 @@ const deleteReport = async (req, res) => {
     try {
         const { id } = req.params;
 
-        await Form.destroy({
-            where: {
-                id,
-                label: "report",
-            },
+        let condition = {
+            id,
+            label: "report",
+        };
+
+        if (req.user.role !== "admin"){
+            condition.user_id = req.user.id;
+        }
+
+        const deleted = await Form.destroy({
+            where: condition,
         });
+
+        if (!deleted) {
+            return res.status(404).json({
+                message: "Laporan tidak ditemukan"
+            });
+        }
 
         res.status(200).json({
             message: "Laporan berhasil dihapus"

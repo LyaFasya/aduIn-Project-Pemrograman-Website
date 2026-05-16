@@ -1,16 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const reportController = require("../controllers/report.controller");
+const {
+    createReport,
+    getAllReports,
+    getReportById,
+    deleteReport,
+    updateStatus
+} = require("../controllers/report.controller");
 
-router.post("/", reportController.createReport);
+const { verifyToken } = require("../middlewares/auth");
+const upload = require("../middlewares/upload");
 
-router.get("/", reportController.getAllReports);
-
-router.get("/:id", reportController.getReportById);
-
-router.get("/:id", reportController.deleteReport);
-
-router.get("/:id/status", reportController.updateStatus);
+router.post("/", verifyToken, upload.single("image_url"), createReport);
+router.get("/", verifyToken, getAllReports);
+router.get("/:id", verifyToken, getReportById);
+router.delete("/:id", verifyToken, deleteReport);
+router.patch("/:id/status", verifyToken, updateStatus);
 
 module.exports = router;
