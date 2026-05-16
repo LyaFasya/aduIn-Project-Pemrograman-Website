@@ -75,10 +75,16 @@ const login = async (req, res) => {
 
     await user.update({ refresh_token: refreshToken });
 
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 hari
+    });
+
     res.status(200).json({
       message: 'Login berhasil',
-      accessToken,
-      refreshToken
+      accessToken
     });
   } catch (error) {
     res.status(500).json({ message: 'Terjadi kesalahan server', error: error.message });
@@ -87,7 +93,7 @@ const login = async (req, res) => {
 
 const refreshToken = async (req, res) => {
   try {
-    const { refreshToken: token } = req.body;
+    const token = req.cookies.refreshToken;
 
     if (!token) return res.status(401).json({ message: 'Refresh token tidak ditemukan' });
     const user = await User.findOne({ where: { refresh_token: token } });
@@ -109,11 +115,12 @@ const refreshToken = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    const { refreshToken: token } = req.body;
+    const token = req.cookies.refreshToken;
     if (!token) return res.status(400).json({ message: 'Refresh token diperlukan' });
     const user = await User.findOne({ where: { refresh_token: token } });
     if (!user) return res.status(404).json({ message: 'Refresh token tidak ditemukan' });
     await user.update({ refresh_token: null });
+    res.clearCookie('refreshToken');
     res.status(200).json({ message: 'Logout berhasil' });
   } catch (error) {
     res.status(500).json({ message: 'Terjadi kesalahan server', error: error.message });
