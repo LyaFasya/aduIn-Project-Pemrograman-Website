@@ -15,11 +15,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const reportRoutes = require("./routes/report.route");
 const requestRoutes = require('./routes/request.route');
-const authRoutes = require('./routes/auth.route'); 
+const authRoutes = require('./routes/auth.route');
+const profileRoutes = require('./routes/profile.route');
 
 app.use("/reports", reportRoutes);
 app.use('/requests', requestRoutes);
 app.use('/auth', authRoutes);
+app.use('/profile', profileRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

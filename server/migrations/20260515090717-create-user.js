@@ -22,6 +22,10 @@ module.exports = {
         type: Sequelize.ENUM('admin', 'user'),
         defaultValue: 'user'
       },
+      refresh_token: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
