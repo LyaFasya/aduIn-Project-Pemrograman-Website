@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
         Form.belongsTo(models.User, { foreignKey: 'user_id' });
         Form.belongsTo(models.Category, { foreignKey: 'category_id' });
+        Form.hasMany(models.FormsHistory, { foreignKey: 'forms_request_id' });
     }
   }
   Form.init({
