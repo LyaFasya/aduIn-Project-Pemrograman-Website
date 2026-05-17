@@ -159,3 +159,41 @@ input[type="file"] {
 .auth-box a:hover {
     text-decoration: underline;
 }
+
+/*ini buat styling profile*/
+.profile-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    background-color: #f4f7f6;
+}
+
+.profile-details {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.profile-details p {
+    margin-bottom: 15px;
+    font-size: 1.05rem;
+}
+
+.profile-details strong {
+    display: inline-block;
+    width: 120px;
+    color: #2c3e50;
+}
