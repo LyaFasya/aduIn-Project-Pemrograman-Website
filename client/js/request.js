@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 });
 
                 const cardHTML = `
-                    <div class="card" id="card-${item.id}">
+                    <div style="border: 1px solid #888; border-radius: 5px" class="card" id="card-${item.id}">
                         <img src="${item.image_url || 'assets/placeholder.jpg'}" alt="Foto ${item.title}" class="card-img">
                         <div class="card-body">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
