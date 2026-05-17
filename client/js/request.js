@@ -11,7 +11,7 @@ async function hapusPengajuan(id) {
         const token = localStorage.getItem('aduin_token');
         
         try {
-            const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
+            const response = await fetch(`http://localhost:3000/requests/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/requests', {
+        const response = await fetch('http://localhost:3000/requests', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             }
 
             try {
-                const response = await fetch("http://localhost:3000/api/requests", {
+                const response = await fetch("http://localhost:3000/requests", {
                     method: "POST",
                     headers: { "Authorization": `Bearer ${token}` },
                     body: formData
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 }
             } catch (error) {
                 console.error("Error submit pengajuan:", error);
-                alert("Terjadi kesalahan jaringan saat mengirim data.");
+                alert("Terjadi kesalahan jaringan saat mengirim data");
             } finally {
                 btnSubmit.textContent = "Kirim Pengajuan";
                 btnSubmit.disabled = false;

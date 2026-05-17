@@ -124,3 +124,38 @@ input[type="file"] {
     font-weight: bold; color: #aaa; cursor: pointer;
 }
 .close-btn:hover { color: #e74c3c; }
+
+/*ini buat styling di register dan login*/
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    padding: 20px;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+}
+
+.auth-box h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #2c3e50;
+}
+
+.auth-box p {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.auth-box a {
+    color: blue;
+    text-decoration: underline;
+}
+
+.auth-box a:hover {
+    text-decoration: underline;
+}
