@@ -1,14 +1,14 @@
+const { Form, User, Category, FormsHistory } = require("../models");
 const cloudinaryService = require("../services/cloudinary.service");
-const { Form, User, Category } = require("../models");
 
+//User Operations
 const createReport = async (req, res) => {
     try {
         const { title, description, location, category_id } = req.body;
-
         let imageUrl = null;
 
         if (req.file) {
-            const uploadResult = await cloudinaryService.uploadImage(req.file, "report");
+            const uploadResult = await cloudinaryService.uploadImage(req.file, "reports");
             imageUrl = uploadResult.url;
         }
 
@@ -126,26 +126,130 @@ const deleteReport = async (req, res) => {
     }
 };
 
-const updateStatus = async(req, res) => {
+// ADMIN OPERATIONS
+const getAdminReportDetail = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status} = req.body;
+
+        const report = await Form.findOne({
+            where: {
+                id,
+                label: "report",
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: Category,
+                    attributes: ["id", "name"],
+                },
+                {
+                    model: FormsHistory,
+                    attributes: ["id", "status", "note", "updated_by", "createdAt"],
+                },
+            ],
+        });
+
+        if (!report) {
+            return res.status(404).json({
+                message: "Laporan tidak ditemukan",
+            });
+        }
+
+        res.status(200).json({
+            data: report,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+const updateReportStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status, note } = req.body;
+        const admin_id = req.user.id;
+
+        const validStatus = ["pending", "process", "done", "rejected"];
+        if (!validStatus.includes(status)) {
+            return res.status(400).json({
+                message: "Status tidak valid. Gunakan: pending, process, done, atau rejected",
+            });
+        }
+
+        const report = await Form.findByPk(id);
+        if (!report || report.label !== "report") {
+            return res.status(404).json({
+                message: "Laporan tidak ditemukan",
+            });
+        }
 
         await Form.update(
             { status },
-            {
-                where: {
-                    id,
-                    label: "report",
-                },
-            }
+            { where: { id, label: "report" } }
         );
 
-        const updateReport = await Form.findByPk(id);
+        await FormsHistory.create({
+            forms_request_id: id,
+            status,
+            note: note || null,
+            updated_by: admin_id,
+        });
+
+        const updatedReport = await Form.findOne({
+            where: { id },
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: Category,
+                    attributes: ["id", "name"],
+                },
+                {
+                    model: FormsHistory,
+                    attributes: ["id", "status", "note", "updated_by", "createdAt"],
+                },
+            ],
+        });
 
         res.status(200).json({
             message: "Status laporan berhasil diupdate",
-            data: updateReport,
+            data: updatedReport,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+const deleteSpamReport = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const report = await Form.findByPk(id);
+        if (!report || report.label !== "report") {
+            return res.status(404).json({
+                message: "Laporan tidak ditemukan",
+            });
+        }
+
+        await FormsHistory.destroy({
+            where: { forms_request_id: id },
+        });
+
+        await Form.destroy({
+            where: { id, label: "report" },
+        });
+
+        res.status(200).json({
+            message: "Laporan spam berhasil dihapus",
         });
     } catch (error) {
         res.status(500).json({
@@ -155,9 +259,13 @@ const updateStatus = async(req, res) => {
 };
 
 module.exports = {
+    //User Operations
     createReport,
     getAllReports,
     getReportById,
     deleteReport,
-    updateStatus,
+    //Admin Operations
+    getAdminReportDetail,
+    updateReportStatus,
+    deleteSpamReport,
 };
