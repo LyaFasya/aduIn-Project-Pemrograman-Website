@@ -44,6 +44,16 @@ const getAllReports = async (req, res) => {
 
         const reports = await Form.findAll({
             where: condition,
+            include: [
+                {
+                    model: User,
+                    attributes: ["id", "name", "email"],
+                },
+                {
+                    model: Category,
+                    attributes: ["id", "name"],
+                },
+            ],
         });
 
         res.status(200).json({
@@ -188,7 +198,14 @@ const updateReportStatus = async (req, res) => {
             });
         }
 
-        await Form.update(
+        const validStatuses = ['pending', 'process', 'done', 'rejected'];
+        if (!status || !validStatuses.includes(status)) {
+            return res.status(400).json({
+                message: `Status tidak valid. Gunakan salah satu: ${validStatuses.join(', ')}`
+            });
+        }
+
+        const [updated] = await Form.update(
             { status },
             { where: { id, label: "report" } }
         );

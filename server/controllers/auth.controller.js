@@ -20,7 +20,15 @@ const generateRefreshToken = (user) => {
 
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Request body diperlukan' });
+    }
+
+    const { name, email, password, role } = req.body || {};
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Nama, email, dan password wajib diisi' });
+    }
 
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -62,7 +70,15 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Request body diperlukan' });
+    }
+
+    const { email, password } = req.body || {};
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email dan password wajib diisi' });
+    }
 
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(404).json({ message: 'Email tidak ditemukan' });
