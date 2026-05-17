@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Saya - AduIn</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">AduIn</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Pengajuan Fasilitas</a></li>
+            <li><a href="pelaporan.html">Pelaporan Kerusakan</a></li>
+            <li><a href="profile.html" class="active">Profil</a></li>
+        </ul>
+        <button id="btnLogout" class="btn btn-red">Keluar</button>
+    </nav>
+    
+    <main class="container">
+        <div class="box profile-card">
+            <div class="profile-header">
+                <img src="https://ui-avatars.com/api/?name=User&background=random" alt="Foto Profil" id="displayPhoto" class="profile-img">
+                <h2 id="displayName">Memuat</h2>
+                <span class="badge pending" id="displayRole" style="margin-top: 10px;">User</span>
+            </div>
+            
+            <div class="profile-details">
+                <p><strong>Email</strong> : <span id="displayEmail">Memuat...</span></p>
+                <p><strong>No. Telepon</strong> : <span id="displayPhone">-</span></p>
+                <p><strong>Alamat</strong> : <span id="displayAddress">-</span></p>
+            </div>
+            
+            <button class="btn btn-blue w-100" id="btnEditProfile" style="margin-top: 20px;">Edit Profil</button>
+        </div>
+
+        <div id="modalProfile" class="modal">
+            <div class="modal-content box">
+                <span class="close-btn" id="closeProfileModal">x</span>
+                <h2 style="margin-bottom: 20px;">Edit Profil</h2>
+                
+                <form id="formProfile">
+                    <label for="editName">Nama Lengkap</label>
+                    <input type="text" id="editName" required>
+
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+
+                    <label for="editPassword">Password Baru (Opsional)</label>
+                    <input type="password" id="editPassword" placeholder="Kosongkan jika tidak ingin mengubah password">
+
+                    <label for="editPhone">Nomor Telepon</label>
+                    <input type="text" id="editPhone" placeholder="Contoh: 081234567890">
+
+                    <label for="editAddress">Alamat</label>
+                    <textarea id="editAddress" rows="3" placeholder="Masukkan alamat lengkap"></textarea>
+
+                    <label for="editPhoto">Foto Profil (Opsional)</label>
+                    <input type="file" id="editPhoto" accept="image/*">
+
+                    <button type="submit" class="btn btn-blue w-100" id="btnSubmitProfile">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/profile.js"></script>
+</body>
+</html>
