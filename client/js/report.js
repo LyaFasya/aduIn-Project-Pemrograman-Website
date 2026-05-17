@@ -1,6 +1,3 @@
-const BASE_URL = 'http://localhost:3000';
-
-// Cek token di awal sebelum DOM load
 const _tokenCheck = localStorage.getItem('aduin_token');
 if (!_tokenCheck) {
     window.location.href = 'login.html';
