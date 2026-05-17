@@ -24,7 +24,7 @@ module.exports = {
       },
       refresh_token: {
         type: Sequelize.STRING,
-        allowNull: true 
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
