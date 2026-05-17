@@ -18,9 +18,7 @@ async function hapusPengajuan(id) {
                 }
             });
 
-            if (response.ok) {
-                alert("Data pengajuan berhasil dihapus!");
-                
+            if (response.ok) {              
                 const cardDihapus = document.getElementById(`card-${id}`);
                 if (cardDihapus) cardDihapus.remove();
                 
@@ -41,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     
     const token = localStorage.getItem('aduin_token');
     if (!token) {
-        alert("Anda belum login, Silakan login terlebih dahulu");
+        alert("Anda belum login, Silahkan login terlebih dahulu");
         window.location.href = 'login.html';
         return; 
     }
@@ -70,7 +68,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
             if(dataPengajuan.length === 0) {
                 container.innerHTML = '<p>Belum ada data pengajuan fasilitas.</p>';
-                return;
             }
 
             dataPengajuan.forEach(item => {
@@ -113,5 +110,75 @@ document.addEventListener("DOMContentLoaded", async function() {
     } catch (error) {
         console.error("terjadi kesalahan:", error);
         container.innerHTML = `<p>tidak dapat terhubung ke server</p>`;
+    }
+
+    const modal = document.getElementById("modalPengajuan");
+    const btnBukaModal = document.getElementById("btnBuatPengajuan");
+    const btnTutupModal = document.getElementById("closeModal");
+    const formPengajuan = document.getElementById("formPengajuan");
+    const btnSubmit = document.getElementById("btnSubmitPengajuan");
+
+    if (btnBukaModal) {
+        btnBukaModal.addEventListener("click", () => {
+            modal.style.display = "flex";
+        });
+    }
+
+    if (btnTutupModal) {
+        btnTutupModal.addEventListener("click", () => {
+            modal.style.display = "none";
+            formPengajuan.reset(); 
+        });
+    }
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            formPengajuan.reset();
+        }
+    });
+
+    if (formPengajuan) {
+        formPengajuan.addEventListener("submit", async function(e) {
+            e.preventDefault(); 
+            btnSubmit.textContent = "Sedang diproses";
+            btnSubmit.style.backgroundColor = "#ccc";
+            btnSubmit.disabled = true;
+
+            const formData = new FormData();
+            formData.append("title", document.getElementById("title").value);
+            formData.append("location", document.getElementById("location").value);
+            formData.append("category_id", document.getElementById("category_id").value);
+            formData.append("description", document.getElementById("description").value);
+            
+            const imageFile = document.getElementById("image").files[0];
+            if (imageFile) {
+                formData.append("image_url", imageFile); 
+            }
+
+            try {
+                const response = await fetch("http://localhost:3000/api/requests", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    modal.style.display = "none";
+                    formPengajuan.reset();
+                    window.location.reload(); 
+                } else {
+                    alert(`Gagal mengirim pengajuan: ${result.message || result.error}`);
+                }
+            } catch (error) {
+                console.error("Error submit pengajuan:", error);
+                alert("Terjadi kesalahan jaringan saat mengirim data.");
+            } finally {
+                btnSubmit.textContent = "Kirim Pengajuan";
+                btnSubmit.disabled = false;
+            }
+        });
     }
 });

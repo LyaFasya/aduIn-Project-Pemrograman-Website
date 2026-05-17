@@ -14,17 +14,48 @@
             <li><a href="pelaporan.html">Pelaporan Kerusakan</a></li>
             <li><a href="profil.html">Profil</a></li>
         </ul>
-        <button id="btnLogout" class="btn-logout">Keluar</button>
+        <button id="btnLogout" class="btn btn-red">Keluar</button>
     </nav>
     
     <main class="container">
         <div class="header-action">
             <h2>Daftar Pengajuan Fasilitas</h2>
-            <button class="btn-primary" id="btnBuatPengajuan">+ Buat Pengajuan</button> 
+            <button class="btn btn-blue" id="btnBuatPengajuan">+ Buat Pengajuan</button> 
         </div>
 
         <div id="pengajuanContainer" class="grid-container">
             <p>Memuat data pengajuan...</p>
+        </div>
+
+        <div id="modalPengajuan" class="modal">
+            <div class="modal-content box">
+                <span class="close-btn" id="closeModal">&times;</span>
+                <h2 style="margin-bottom: 20px;">Buat Pengajuan Baru</h2>
+                
+                <form id="formPengajuan">
+                    <label for="title">Judul Pengajuan</label>
+                    <input type="text" id="title" required placeholder="Contoh: Pembuatan Taman Bermain">
+                    
+                    <label for="location">Lokasi (Kota/Alamat)</label>
+                    <input type="text" id="location" required placeholder="Contoh: Malang">
+                    
+                    <label for="category_id">Kategori</label>
+                    <select id="category_id" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="1">Jalan Rusak</option>
+                        <option value="2">Penerangan Jalan</option>
+                        <option value="3">Fasilitas Umum</option>
+                    </select>
+                    
+                    <label for="description">Deskripsi</label>
+                    <textarea id="description" rows="3" required placeholder="Jelaskan detail fasilitas yang ingin diajukan"></textarea>
+                    
+                    <label for="image">Unggah Foto Lokasi</label>
+                    <input type="file" id="image" accept="image/*" required>
+                    
+                    <button type="submit" class="btn btn-blue w-100" id="btnSubmitPengajuan">Kirim Pengajuan</button>
+                </form>
+            </div>
         </div>
     </main>
 
