@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengajuan Fasilitas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">AduIn</div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Pengajuan Fasilitas</a></li>
+            <li><a href="pelaporan.html">Pelaporan Kerusakan</a></li>
+            <li><a href="profil.html">Profil</a></li>
+        </ul>
+        <button id="btnLogout" class="btn-logout">Keluar</button>
+    </nav>
+    
+    <main class="container">
+        <div class="header-action">
+            <h2>Daftar Pengajuan Fasilitas</h2>
+            <button class="btn-primary" id="btnBuatPengajuan">+ Buat Pengajuan</button> 
+        </div>
+
+        <div id="pengajuanContainer" class="grid-container">
+            <p>Memuat data pengajuan...</p>
+        </div>
+    </main>
+
+    <script src="js/request.js"></script>
+</body>
+</html>
