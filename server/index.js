@@ -5,23 +5,31 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
-const app = express();
-const allowedOrigins = [
-    'http://127.0.0.1:5500',
-    'http://localhost:5500',
-    'http://127.0.0.1:5501',
-    'http://localhost:5501'
-];
+// const app = express();
+// const allowedOrigins = [
+//     'http://127.0.0.1:3500',
+//     'http://localhost:3500',
+//     'http://127.0.0.1:3501',
+//     'http://localhost:3501'
+// ];
 
-app.use(cors({ 
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        }
-        return callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true 
+// app.use(cors({ 
+//     origin: (origin, callback) => {
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             return callback(null, true);
+//         }
+//         return callback(new Error('Not allowed by CORS'));
+//     },
+//     credentials: true 
+// }));
+
+const app = express();
+
+app.use(cors({
+    origin: true,
+    credentials: true
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

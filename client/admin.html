@@ -541,7 +541,7 @@
             <div class="logo">AduIn</div>
             <ul class="sidebar-nav">
                 <li><a href="javascript:void(0)" onclick="window.location.href='admin.html'" class="active">Dashboard</a></li>
-                <li><a href="admin.category.html">Tambah Kategori</a></li>
+                <li><a href="#" data-selection="kategori">Tambah Kategori</a></li>
             </ul>
             <div class="logout-section">
                 <a href="#" id="linkProfile" style="color: #3498db;">Profil</a>
@@ -550,18 +550,51 @@
         </div>
 
         <!-- Content -->
-        <div class="admin-content">
-            <div class="admin-header">
-                <h1 id="adminName">Nama Admin</h1>
-            </div>
+        <div id="sectionDashboard" class="section active">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h1 id="adminName">Nama Admin</h1>
+                </div>
 
-            <div class="dashboard-grid" id="containerLaporan">
-                <div class="no-data">
-                    <p>Memuat data laporan...</p>
+                <div class="dashboard-grid" id="containerLaporan">
+                    <div class="no-data">
+                        <p>Memuat data laporan...</p>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div id="sectionKategori" class="section">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h1>Tambah Kategori</h1>
+                </div>
+
+    <div class="table-responsive" style="padding:20px;">
+        <form id="formKategori">
+
+            <label>Nama Kategori</label>
+            <input 
+                type="text" 
+                id="categoryName" 
+                placeholder="Contoh: Drainase"
+                required
+            >
+
+            <button type="submit" class="btn btn-blue">
+                Tambah Kategori
+            </button>
+
+        </form>
+
+        <hr style="margin:20px 0;">
+
+        <div id="containerKategori"></div>
+
     </div>
+</div>
+</div>
+</div>
 
     <!-- Modal Detail -->
     <div id="modalDetail" class="modal-detail">

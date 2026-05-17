@@ -21,7 +21,12 @@ if (loginForm) {
 
             if (response.ok) {
                 localStorage.setItem('aduin_token', result.accessToken);
-                window.location.href = 'index.html'; 
+                localStorage.setItem('aduin_role', result.role);
+                if (result.role === 'admin') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
             } else {
                 alert('Gagal login: ' + result.message);
             }

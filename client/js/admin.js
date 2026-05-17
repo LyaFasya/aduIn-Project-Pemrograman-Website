@@ -1,8 +1,9 @@
 const BASE_URL = 'http://localhost:3000';
 
-// Cek token
+// Cek token dan role admin
 const _tokenCheck = localStorage.getItem('aduin_token');
-if (!_tokenCheck) {
+const _roleCheck = localStorage.getItem('aduin_role');
+if (!_tokenCheck || _roleCheck !== 'admin') {
     window.location.href = 'login.html';
 }
 
@@ -47,6 +48,19 @@ function formatDate(dateString) {
     });
 }
 
+function setActiveSection(section) {
+    const dashboardSection = document.getElementById('sectionDashboard');
+    const kategoriSection = document.getElementById('sectionKategori');
+    const navLinks = document.querySelectorAll('.sidebar-nav a[data-selection]');
+
+    if (dashboardSection) dashboardSection.classList.toggle('active', section === 'dashboard');
+    if (kategoriSection) kategoriSection.classList.toggle('active', section === 'kategori');
+
+    navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.selection === section);
+    });
+}
+
 // ============ REPORT FUNCTIONS - CARD BASED ============
 async function loadLaporan() {
     const token = localStorage.getItem('aduin_token');
@@ -72,14 +86,14 @@ async function loadLaporan() {
             dataLaporan.forEach(item => {
                 const imgSrc = item.image_url || 'https://placehold.co/400x200/1a1d2e/6C63FF?text=No+Image';
                 const tanggal = formatDate(item.createdAt);
-                const kategori = item.category?.name || item.category_id || 'N/A';
+                const kategori = item.Category?.name || item.category_id || 'N/A';
 
                 const cardHTML = `
                     <div class="card" id="card-${item.id}">
                         <img src="${imgSrc}" alt="Foto ${item.title}" class="card-img" onerror="this.src='https://placehold.co/400x200/1a1d2e/6C63FF?text=No+Image'">
                         <div class="card-body">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                                <span class="badge ${item.status}">${getStatusBadge(item.status)}</span>
+                                ${getStatusBadge(item.status)}
                                 <small style="color:var(--text-muted);font-size:0.8rem;">${tanggal}</small>
                             </div>
                             <h3 class="card-title">${item.title}</h3>
@@ -370,6 +384,86 @@ async function deleteLaporanAndClose(id) {
     }
 }
 
+// ============ CATEGORY FUNCTIONS ============
+async function loadKategori() {
+    const token = localStorage.getItem('aduin_token');
+    const container = document.getElementById('containerKategori');
+
+    if (!container) return;
+
+    try {
+        const response = await fetch(`${BASE_URL}/categories`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            const dataKategori = result.data || result;
+
+            if (!dataKategori || dataKategori.length === 0) {
+                container.innerHTML = `<p>Tidak ada kategori</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            dataKategori.forEach(item => {
+                container.innerHTML += `
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">${item.name}</h3>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            container.innerHTML = `<p>Gagal memuat kategori</p>`;
+        }
+
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = `<p>Tidak dapat terhubung ke server</p>`;
+    }
+}
+
+async function tambahKategori(e) {
+    e.preventDefault();
+
+    const token = localStorage.getItem('aduin_token');
+    const name = document.getElementById('categoryName').value;
+
+    try {
+        const response = await fetch(`${BASE_URL}/categories`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showToast('Kategori berhasil ditambahkan', 'success');
+
+            document.getElementById('formKategori').reset();
+
+            loadKategori();
+        } else {
+            showToast(result.message || 'Gagal tambah kategori', 'error');
+        }
+
+    } catch (error) {
+        console.error(error);
+        showToast('Terjadi kesalahan', 'error');
+    }
+}
+
 // ============ MAIN INIT ============
 document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem('aduin_token');
@@ -378,7 +472,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalDetail = document.getElementById('modalDetail');
     const closeModalDetail = document.getElementById('closeModalDetail');
 
-    if (!token) {
+    const role = localStorage.getItem('aduin_role');
+    if (!token || role !== 'admin') {
         window.location.href = 'login.html';
         return;
     }
@@ -402,6 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btnLogout.addEventListener('click', function (e) {
             e.preventDefault();
             localStorage.removeItem('aduin_token');
+            localStorage.removeItem('aduin_role');
             window.location.href = 'login.html';
         });
     }
@@ -422,11 +518,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.addEventListener('click', function (e) {
-        if (e.target === modalDetail) {
+        if (modalDetail && e.target === modalDetail) {
             modalDetail.classList.remove('show');
         }
     });
 
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a[data-selection]');
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const selection = this.dataset.selection;
+            setActiveSection(selection);
+        });
+    });
+
     // Load dashboard by default
     loadLaporan();
+    loadKategori();
+
+    const formKategori = document.getElementById('formKategori');
+
+if (formKategori) {
+    formKategori.addEventListener('submit', tambahKategori);
+}
 });
