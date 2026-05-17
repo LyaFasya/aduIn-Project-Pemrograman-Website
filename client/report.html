@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelaporan Fasilitas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">AduIn</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Pengajuan Fasilitas</a></li>
+            <li><a href="report.html" class="active">Pelaporan Kerusakan</a></li>
+            <li><a href="profil.html">Profil</a></li>
+        </ul>
+        <button id="btnLogout" class="btn btn-red">Keluar</button>
+    </nav>
+
+    <main class="container">
+        <div class="header-action">
+            <h1 style="font-size:1.5rem;">Daftar Pelaporan Kerusakan</h1>
+            <button class="btn btn-blue" id="btnBuatPelaporan">+ Buat Laporan</button>
+        </div>
+
+        <div id="pelaporanContainer" class="grid-container">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Memuat data pelaporan...</p>
+            </div>
+        </div>
+
+        <div id="modalPelaporan" class="modal">
+            <div class="modal-content box">
+                <span class="close-btn" id="closeModal">&times;</span>
+                <h2 style="margin-bottom: 20px;">Buat Laporan Baru</h2>
+
+                <form id="formPelaporan">
+                    <label for="title">Judul Laporan</label>
+                    <input type="text" id="title" required placeholder="Contoh: Pengaduan Jalanan Berlubang">
+
+                    <label for="location">Lokasi (Kota/Alamat)</label>
+                    <input type="text" id="location" required placeholder="Contoh: Malang">
+
+                    <label for="category_id">Kategori</label>
+                    <select id="category_id" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="1">Jalan Rusak</option>
+                        <option value="2">Penerangan Jalan</option>
+                        <option value="3">Fasilitas Umum</option>
+                    </select>
+
+                    <label for="description">Deskripsi</label>
+                    <textarea id="description" rows="3" required
+                        placeholder="Jelaskan detail fasilitas yang ingin dilaporkan"></textarea>
+
+                    <label for="image">Unggah Foto Fasilitas yang Rusak</label>
+                    <input type="file" id="image" accept="image/*" required>
+
+                    <button type="submit" class="btn btn-blue w-100" id="btnSubmitPelaporan">Kirim Laporan</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/report.js"></script>
+</body>
+
+</html>
