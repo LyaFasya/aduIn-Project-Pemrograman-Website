@@ -1,3 +1,40 @@
+const token = localStorage.getItem('aduin_token');
+if (!token) {
+    alert("terdeteksi belum login atau register");
+    window.location.href = 'login.html';  
+}
+
+async function hapusPengajuan(id) {
+    const yakin = confirm("Apakah Anda yakin akan menghapus pengajuan ini?");
+    
+    if (yakin) {
+        const token = localStorage.getItem('aduin_token');
+        
+        try {
+            const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                alert("Data pengajuan berhasil dihapus!");
+                
+                const cardDihapus = document.getElementById(`card-${id}`);
+                if (cardDihapus) cardDihapus.remove();
+                
+            } else {
+                const result = await response.json();
+                alert(`Gagal menghapus: ${result.message}`);
+            }
+        } catch (error) {
+            console.error("Error delete:", error);
+            alert("terjadi kesalahan pada saat menghapus data");
+        }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async function() {
     const container = document.getElementById('pengajuanContainer');
     const btnLogout = document.getElementById('btnLogout');
@@ -64,37 +101,6 @@ document.addEventListener("DOMContentLoaded", async function() {
                 container.insertAdjacentHTML('beforeend', cardHTML);
             });
             
-            async function hapusPengajuan(id) {
-                const yakin = confirm("Apakah Anda yakin akan menghapus pengajuan ini?");
-                
-                if (yakin) {
-                    const token = localStorage.getItem('aduin_token');
-                    
-                    try {
-                        const response = await fetch(`http://localhost:3000/api/requests/${id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        });
-
-                        if (response.ok) {
-                            alert("Data pengajuan berhasil dihapus!");
-                            
-                            const cardDihapus = document.getElementById(`card-${id}`);
-                            if (cardDihapus) cardDihapus.remove();
-                            
-                        } else {
-                            const result = await response.json();
-                            alert(`Gagal menghapus: ${result.message}`);
-                        }
-                    } catch (error) {
-                        console.error("Error delete:", error);
-                        alert("Terjadi kesalahan saat menghapus data.");
-                    }
-                }
-            }
-
         } else {
             if(response.status === 401 || response.status === 403) {
                 alert("Sesi Anda telah habis. Silakan login kembali.");
