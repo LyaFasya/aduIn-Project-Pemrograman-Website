@@ -14,14 +14,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const reportRoutes = require("./routes/report.route");
-const requestRoutes = require('./routes/request.routes');
-const authRoutes = require('./routes/auth.routes');
+const requestRoutes = require('./routes/request.route');
+const authRoutes = require('./routes/auth.route');
+const profileRoutes = require('./routes/profile.route');
 const categoryRoutes = require('./routes/category.route');
 
 app.use("/reports", reportRoutes);
 app.use('/requests', requestRoutes);
 app.use('/auth', authRoutes);
 app.use('/categories', categoryRoutes);
+app.use('/profiles', profileRoutes);
 
 // Handle malformed JSON bodies dari client (harus di bawah semua route)
 app.use((err, req, res, next) => {
@@ -34,4 +36,4 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-});
+});

@@ -17,7 +17,7 @@ router.delete("/:id", reportController.deleteReport);
 // ADMIN ROUTES
 router.get("/admin/:id", verifyToken, verifyAdmin, reportController.getAdminReportDetail);
 
-router.put("/:id/status", verifyToken, verifyAdmin, reportController.updateReportStatus);
+router.patch("/:id/status", verifyToken, verifyAdmin, reportController.updateReportStatus);
 
 router.delete("/admin/:id", verifyToken, verifyAdmin, reportController.deleteSpamReport);
 
