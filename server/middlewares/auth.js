@@ -23,4 +23,7 @@ const verifyAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { verifyToken, verifyAdmin };
+// isAdmin adalah alias dari verifyAdmin (untuk kompatibilitas)
+const isAdmin = verifyAdmin;
+
+module.exports = { verifyToken, verifyAdmin, isAdmin };

@@ -9,4 +9,4 @@ router.get('/', verifyToken, getProfile);
 router.post('/', verifyToken, upload.single('photo'), createProfile);
 router.patch('/', verifyToken, upload.single('photo'), updateProfile);
 
-module.exports = router;
+module.exports = router; 

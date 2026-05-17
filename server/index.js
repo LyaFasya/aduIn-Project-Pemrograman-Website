@@ -17,11 +17,21 @@ const reportRoutes = require("./routes/report.route");
 const requestRoutes = require('./routes/request.route');
 const authRoutes = require('./routes/auth.route');
 const profileRoutes = require('./routes/profile.route');
+const categoryRoutes = require('./routes/category.route');
 
 app.use("/reports", reportRoutes);
 app.use('/requests', requestRoutes);
 app.use('/auth', authRoutes);
-app.use('/profile', profileRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/profiles', profileRoutes);
+
+// Handle malformed JSON bodies dari client (harus di bawah semua route)
+app.use((err, req, res, next) => {
+    if (err && err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        return res.status(400).json({ message: 'Invalid JSON in request body' });
+    }
+    next(err);
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

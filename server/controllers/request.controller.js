@@ -112,7 +112,7 @@ const deleteRequest = async (req, res) => {
       return res.status(404).json({ message: 'Pengajuan fasilitas tidak ditemukan' });
     }
 
-    res.status(200).json({ message: 'Pengajuan fasilitas berhasil dihapus' });
+    res.status(200).json({ message:'Pengajuan fasilitas berhasil dihapus'});
   } catch (error) {
     res.status(500).json({ message: 'Gagal menghapus pengajuan fasilitas', error: error.message });
   }

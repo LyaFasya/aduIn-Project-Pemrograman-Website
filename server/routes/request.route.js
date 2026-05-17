@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { createRequest, getAllRequests, getRequestById, updateRequestStatus, deleteRequest } = require('../controllers/request.controller');
-const { verifyToken, verifyAdmin } = require('../middlewares/auth');
+const { verifyToken, verifyAdmin } = require('../middlewares/auth'); 
 const upload = require('../middlewares/upload');
 
 router.post('/', verifyToken, upload.single('image_url'), createRequest);
