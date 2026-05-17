@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     const displayPhoto = document.getElementById('displayPhoto');
     const displayName = document.getElementById('displayName');
-    const displayRole = document.getElementById('displayRole');
     const displayEmail = document.getElementById('displayEmail');
     const displayPhone = document.getElementById('displayPhone');
     const displayAddress = document.getElementById('displayAddress');
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", async function() {
 
                 displayName.textContent = user.name;
                 displayEmail.textContent = user.email;
-                displayRole.textContent = user.role.toUpperCase();
                 displayPhone.textContent = profile.phone || '-';
                 displayAddress.textContent = profile.address || '-';
                 

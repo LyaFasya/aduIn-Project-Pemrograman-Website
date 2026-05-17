@@ -197,3 +197,7 @@ input[type="file"] {
     width: 120px;
     color: #2c3e50;
 }
+
+#editAddress {
+    resize: vertical;
+}
