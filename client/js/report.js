@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (btnLogout) {
         btnLogout.addEventListener('click', function () {
             localStorage.removeItem('aduin_token');
+            localStorage.removeItem('aduin_role');
             window.location.href = 'login.html';
         });
     }
@@ -123,6 +124,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (response.status === 401 || response.status === 403) {
                 showToast('Sesi habis, silakan login kembali', 'error');
                 localStorage.removeItem('aduin_token');
+                localStorage.removeItem('aduin_role');
                 setTimeout(() => { window.location.href = 'login.html'; }, 1500);
             } else {
                 container.innerHTML = `<div class="empty-state"><p>Gagal memuat data: ${result.message}</p></div>`;

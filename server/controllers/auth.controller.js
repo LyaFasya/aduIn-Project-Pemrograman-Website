@@ -100,7 +100,8 @@ const login = async (req, res) => {
 
     res.status(200).json({
       message: 'Login berhasil',
-      accessToken
+      accessToken,
+      role: user.role
     });
   } catch (error) {
     res.status(500).json({ message: 'Terjadi kesalahan server', error: error.message });

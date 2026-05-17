@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     if (btnLogout) {
         btnLogout.addEventListener('click', function() {
             localStorage.removeItem('aduin_token');
+            localStorage.removeItem('aduin_role');
             window.location.href = 'login.html';
         });
     }
@@ -102,6 +103,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             if(response.status === 401 || response.status === 403) {
                 alert("Sesi Anda telah habis. Silakan login kembali.");
                 localStorage.removeItem('aduin_token');
+                localStorage.removeItem('aduin_role');
                 window.location.href = 'login.html';
             } else {
                 container.innerHTML = `<p>tidak dapat memuat data: ${result.message}</p>`;

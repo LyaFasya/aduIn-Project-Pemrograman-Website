@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async function() {
             } else {
                 if(response.status === 401 || response.status === 403) {
                     localStorage.removeItem('aduin_token');
+                    localStorage.removeItem('aduin_role');
                     window.location.href = 'login.html';
                 } else {
                     alert('Gagal memuat profil: ' + result.message);
@@ -135,6 +136,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 console.error("Logout API error:", error);
             } finally {
                 localStorage.removeItem('aduin_token');
+                localStorage.removeItem('aduin_role');
                 window.location.href = 'login.html';
             }
         });
