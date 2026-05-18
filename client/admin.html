@@ -4,561 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - AduIn</title>
+    <title>Admin - aduIn</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .admin-layout {
-            display: flex;
-            min-height: 100vh;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
-        .admin-sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .admin-sidebar .logo {
-            padding: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-bottom: 1px solid #34495e;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-            flex: 1;
-        }
-
-        .sidebar-nav li {
-            margin: 0;
-        }
-
-        .sidebar-nav a {
-            display: block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-            border-left: 3px solid transparent;
-            cursor: pointer;
-        }
-
-        .sidebar-nav a:hover,
-        .sidebar-nav a.active {
-            background-color: #34495e;
-            border-left-color: #3498db;
-        }
-
-        .logout-section {
-            border-top: 1px solid #34495e;
-            padding: 20px;
-        }
-
-        .logout-section a {
-            display: block;
-            padding: 10px 20px;
-            color: #e74c3c;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: 0.3s;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .logout-section a:hover {
-            background-color: #c0392b;
-            color: white;
-        }
-
-        .admin-content {
-            margin-left: 250px;
-            flex: 1;
-            padding: 30px;
-            background-color: #f4f7f6;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .admin-header {
-            background-color: white;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .admin-header h1 {
-            color: #2c3e50;
-            margin: 0;
-            font-size: 2rem;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: 0.3s transform, 0.3s box-shadow;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .card-body {
-            padding: 15px;
-        }
-
-        .card-title {
-            margin: 5px 0;
-            font-size: 1.2rem;
-            color: #2c3e50;
-        }
-
-        .card-location {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        .card-desc {
-            font-size: 0.95rem;
-            line-height: 1.4;
-            margin-bottom: 14px;
-            color: #555;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .card-actions .btn {
-            flex: 1;
-            min-width: 70px;
-            padding: 8px 12px;
-            font-size: 0.85rem;
-        }
-
-        .btn-blue {
-            background-color: #3498db;
-            color: white;
-        }
-
-        .btn-blue:hover {
-            background-color: #2980b9;
-        }
-
-        .btn-approve {
-            background-color: #27ae60;
-            color: white;
-        }
-
-        .btn-approve:hover {
-            background-color: #229954;
-        }
-
-        .btn-delete {
-            background-color: #95a5a6;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background-color: #7f8c8d;
-        }
-
-        .modal-detail {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-detail.show {
-            display: flex;
-        }
-
-        .modal-detail-content {
-            background-color: white;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 8px;
-            animation: fadeIn 0.3s ease-in-out;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 15px;
-        }
-
-        .detail-header h2 {
-            margin: 0;
-            color: #2c3e50;
-        }
-
-        .detail-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .detail-info {
-            margin-bottom: 15px;
-        }
-
-        .detail-info strong {
-            color: #2c3e50;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .detail-info p {
-            margin: 0;
-            color: #555;
-        }
-
-        .detail-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            border-top: 2px solid #ecf0f1;
-            padding-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .close-btn {
-            font-size: 28px;
-            font-weight: bold;
-            color: #aaa;
-            cursor: pointer;
-        }
-
-        .close-btn:hover {
-            color: #e74c3c;
-        }
-
-        .table-responsive {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table thead {
-            background-color: #2c3e50;
-            color: white;
-        }
-
-        table th,
-        table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ecf0f1;
-        }
-
-        table tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-        }
-
-        .btn-blue {
-            background-color: #3498db;
-        }
-
-        .btn-blue:hover {
-            background-color: #2980b9;
-        }
-
-        .btn-approve {
-            background-color: #27ae60;
-        }
-
-        .btn-approve:hover {
-            background-color: #229954;
-        }
-
-        .btn-reject {
-            background-color: #e74c3c;
-        }
-
-        .btn-reject:hover {
-            background-color: #c0392b;
-        }
-
-        .btn-delete {
-            background-color: #95a5a6;
-        }
-
-        .btn-delete:hover {
-            background-color: #7f8c8d;
-        }
-
-        .modal-detail {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-detail.show {
-            display: flex;
-        }
-
-        .modal-detail-content {
-            background-color: white;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            border-radius: 8px;
-            animation: fadeIn 0.3s ease-in-out;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 15px;
-        }
-
-        .detail-header h2 {
-            margin: 0;
-            color: #2c3e50;
-        }
-
-        .detail-image {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .detail-info {
-            margin-bottom: 15px;
-        }
-
-        .detail-info strong {
-            color: #2c3e50;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .detail-info p {
-            margin: 0;
-            color: #555;
-        }
-
-        .detail-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            border-top: 2px solid #ecf0f1;
-            padding-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .status-approved {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .badge.pending {
-            background-color: #fff3cd;
-            color: #333;
-        }
-
-        .badge.approved {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .badge.rejected {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge.process {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .badge.done {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .no-data {
-            text-align: center;
-            padding: 40px 20px;
-            color: #7f8c8d;
-        }
-
-        .no-data p {
-            font-size: 1.1rem;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .admin-sidebar {
-                width: 200px;
-            }
-
-            .admin-content {
-                margin-left: 200px;
-                padding: 15px;
-            }
-
-            .admin-header {
-                padding: 15px 20px;
-            }
-
-            .admin-header h1 {
-                font-size: 1.5rem;
-            }
-
-            table {
-                font-size: 0.9rem;
-            }
-
-            table th,
-            table td {
-                padding: 10px;
-            }
-        }
-    </style>
 </head>
 
 <body>
     <div class="admin-layout">
-        <!-- Sidebar -->
         <div class="admin-sidebar">
-            <div class="logo">AduIn</div>
+            <div class="logo">aduIn</div>
             <ul class="sidebar-nav">
-                <li><a href="javascript:void(0)" onclick="window.location.href='admin.html'" class="active">Dashboard</a></li>
-                <li><a href="#" data-selection="kategori">Tambah Kategori</a></li>
+                <li><a href="#" data-selection="dashboard" class="active">Dashboard</a></li>
+                <li><a href="#" data-selection="pelaporan">Pelaporan</a></li>
+                <li><a href="#" data-selection="pengajuan">Pengajuan</a></li>
+                <li><a href="#" data-selection="kategori">Manage Category</a></li>
             </ul>
-            <div class="logout-section">
-                <a href="#" id="linkProfile" style="color: #3498db;">Profil</a>
-                <a href="#" id="btnLogout" style="margin-top: 10px; color: #e74c3c;">Keluar</a>
+            <div class="sidebar-profile">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=random" id="sidebarProfileImg"
+                    class="sidebar-profile-img" alt="Admin Profile">
+                <div class="profile-menu">
+                    <a href="#" data-selection="profil" id="linkProfile">Edit Profil</a>
+                    <a href="#" id="btnLogout" class="text-danger">Keluar</a>
+                </div>
             </div>
         </div>
-
-        <!-- Content -->
         <div id="sectionDashboard" class="section active">
             <div class="admin-content">
                 <div class="admin-header">
                     <h1 id="adminName">Nama Admin</h1>
                 </div>
 
-                <div class="dashboard-grid" id="containerLaporan">
+                <h2>Daftar Pelaporan Kerusakan</h2>
+                <div class="dashboard-grid" id="containerLaporanDashboard">
                     <div class="no-data">
                         <p>Memuat data laporan...</p>
+                    </div>
+                </div>
+                <div id="btnLaporanLihatSemua" class="view-all-container">
+                    <button class="btn btn-outline" onclick="setActiveSection('pelaporan')">Lihat Semua
+                        Pelaporan</button>
+                </div>
+
+                <h2>Daftar Pengajuan Fasilitas</h2>
+                <div class="dashboard-grid" id="containerPengajuanDashboard">
+                    <div class="no-data">
+                        <p>Memuat data pengajuan...</p>
+                    </div>
+                </div>
+                <div id="btnPengajuanLihatSemua" class="view-all-container">
+                    <button class="btn btn-outline" onclick="setActiveSection('pengajuan')">Lihat Semua
+                        Pengajuan</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sectionPelaporan" class="section">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h1>Semua Pelaporan</h1>
+                </div>
+                <div class="dashboard-grid" id="containerPelaporanFull">
+                    <div class="no-data">
+                        <p>Memuat data pelaporan...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sectionPengajuan" class="section">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h1>Semua Pengajuan</h1>
+                </div>
+                <div class="dashboard-grid" id="containerPengajuanFull">
+                    <div class="no-data">
+                        <p>Memuat data pengajuan...</p>
                     </div>
                 </div>
             </div>
@@ -570,41 +92,112 @@
                     <h1>Tambah Kategori</h1>
                 </div>
 
-    <div class="table-responsive" style="padding:20px;">
-        <form id="formKategori">
+                <div class="table-responsive">
+                    <form id="formKategori">
 
-            <label>Nama Kategori</label>
-            <input 
-                type="text" 
-                id="categoryName" 
-                placeholder="Contoh: Drainase"
-                required
-            >
+                        <label>Nama Kategori</label>
+                        <input type="text" id="categoryName" placeholder="Contoh: Drainase" required>
 
-            <button type="submit" class="btn btn-blue">
-                Tambah Kategori
-            </button>
+                        <button type="submit" class="btn btn-blue">
+                            Tambah Kategori
+                        </button>
 
-        </form>
+                    </form>
 
-        <hr style="margin:20px 0;">
+                    <hr>
 
-        <div id="containerKategori"></div>
+                    <div id="containerKategori"></div>
 
+                </div>
+            </div>
+        </div>
+
+        <div id="sectionProfil" class="section">
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h1>Profil Admin</h1>
+                </div>
+                <div class="box">
+                    <form id="formProfilAdmin">
+                        <div class="profile-image-section">
+                            <img id="adminProfilePreview" src="https://placehold.co/150x150/1a1d2e/6C63FF?text=No+Image"
+                                alt="Preview Foto">
+                            <div>
+                                <label for="adminProfilePhoto" class="btn btn-outline">Pilih Foto Baru</label>
+                                <input type="file" id="adminProfilePhoto" accept="image/*"
+                                    onchange="document.getElementById('adminProfilePreview').src = window.URL.createObjectURL(this.files[0])">
+                            </div>
+                        </div>
+                        <div>
+                            <label>Nama Lengkap</label>
+                            <input type="text" id="adminProfileName" required>
+                        </div>
+                        <div>
+                            <label>Email</label>
+                            <input type="email" id="adminProfileEmail" required>
+                        </div>
+                        <div>
+                            <label>Nomor Telepon</label>
+                            <input type="text" id="adminProfilePhone" placeholder="Contoh: 08123456789">
+                        </div>
+                        <div>
+                            <label>Alamat Lengkap</label>
+                            <textarea id="adminProfileAddress" rows="3"></textarea>
+                        </div>
+                        <div>
+                            <label>Password Baru (Kosongkan jika tidak ingin mengubah)</label>
+                            <input type="password" id="adminProfilePassword" placeholder="Masukkan password baru">
+                        </div>
+                        <button type="submit" class="btn btn-blue">Simpan Perubahan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-</div>
-</div>
 
-    <!-- Modal Detail -->
     <div id="modalDetail" class="modal-detail">
         <div class="modal-detail-content">
             <div class="detail-header">
                 <h2 id="detailTitle">Detail</h2>
-                <span class="close-btn" id="closeModalDetail" style="margin: 0; cursor: pointer;">&times;</span>
+                <span class="close-btn" id="closeModalDetail">&times;</span>
             </div>
             <div id="detailContent">
-                <!-- Konten detail akan diisi dengan JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div id="modalUpdateStatus" class="modal-detail">
+        <div class="modal-detail-content">
+            <div class="detail-header">
+                <h2>Update Status</h2>
+                <span class="close-btn" id="closeModalUpdateStatus">&times;</span>
+            </div>
+            <div id="updateStatusContent">
+                <form id="formUpdateStatus">
+                    <input type="hidden" id="updateStatusId">
+                    <input type="hidden" id="updateStatusType">
+
+                    <div>
+                        <label>Status Baru</label>
+                        <select id="updateStatusSelect" required>
+                            <option value="pending">Pending</option>
+                            <option value="process">Process</option>
+                            <option value="done">Done</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Notes dari admin</label>
+                        <textarea id="updateStatusNote" rows="4"
+                            placeholder="Tuliskan alasan atau keterangan status"></textarea>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-outline" id="btnCancelUpdateStatus">Cancel</button>
+                        <button type="submit" class="btn btn-blue">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

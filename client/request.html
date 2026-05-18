@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Pelaporan Kerusakan</title>
+    <title>Daftar Pengajuan Fasilitas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="page-teal">
+<body class="page-skyblue">
     <nav class="navbar">
         <div class="nav-left">
             <div class="logo">aduIn</div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="report.html" class="active">Pelaporan</a></li>
-                <li><a href="request.html">Pengajuan</a></li>
+                <li><a href="report.html">Pelaporan</a></li>
+                <li><a href="request.html" class="active">Pengajuan</a></li>
             </ul>
         </div>
         <div class="nav-right">
@@ -29,38 +29,38 @@
     
     <main class="container">
         <div class="header-action" style="margin-top: 40px; margin-bottom: 40px;">
-            <h2 style="font-size: 2.2rem; font-weight: 800;">Daftar Pelaporan Kerusakan</h2>
-            <button class="btn btn-beige" id="btnBuatPelaporan">+ Buat Laporan</button>
+            <h2 style="font-size: 2.2rem; font-weight: 800;">Daftar Pengajuan Fasilitas</h2>
+            <button class="btn btn-beige" id="btnBuatPengajuan">+ Buat Pengajuan</button> 
         </div>
 
-        <div id="pelaporanContainer" class="grid-container">
-            <p>Sedang memuat pelaporan...</p>
+        <div id="pengajuanContainer" class="grid-container">
+            <p>Sedang memuat pengajuan...</p>
         </div>
 
-        <div id="modalPelaporan" class="modal">
+        <div id="modalPengajuan" class="modal">
             <div class="modal-content box">
-                <span class="close-btn" id="closeModalPelaporan">&times;</span>
-                <h2 style="margin-bottom: 20px;">Buat Laporan Baru</h2>
-
-                <form id="formPelaporan">
-                    <label for="title_pelaporan">Judul Laporan</label>
-                    <input type="text" id="title_pelaporan" required placeholder="Contoh: Pengaduan Jalanan Berlubang">
-
-                    <label for="location_pelaporan">Lokasi (Kota/Alamat)</label>
-                    <input type="text" id="location_pelaporan" required placeholder="Contoh: Malang">
-
-                    <label for="category_id_pelaporan">Kategori</label>
-                    <select id="category_id_pelaporan" required>
-                        <option value="">-- Pilih Kategori --</option>
+                <span class="close-btn" id="closeModalPengajuan">&times;</span>
+                <h2 style="margin-bottom: 20px;">Buat Pengajuan Baru</h2>
+                
+                <form id="formPengajuan">
+                    <label for="title_pengajuan">Judul Pengajuan</label>
+                    <input type="text" id="title_pengajuan" required placeholder="Contoh: Pembuatan Taman Bermain">
+                    
+                    <label for="location_pengajuan">Lokasi (Kota/Alamat)</label>
+                    <input type="text" id="location_pengajuan" required placeholder="Contoh: Malang">
+                    
+                    <label for="category_id_pengajuan">Kategori</label>
+                    <select id="category_id_pengajuan" required>
+                        <option value="">Pilih Kategori</option>
                     </select>
-
-                    <label for="description_pelaporan">Deskripsi</label>
-                    <textarea id="description_pelaporan" rows="3" required placeholder="Jelaskan detail fasilitas yang ingin dilaporkan"></textarea>
-
-                    <label for="image_pelaporan">Unggah Foto Fasilitas yang Rusak</label>
-                    <input type="file" id="image_pelaporan" accept="image/*" required>
-
-                    <button type="submit" class="btn btn-red w-100" id="btnSubmitPelaporan">Kirim Laporan</button>
+                    
+                    <label for="description_pengajuan">Deskripsi</label>
+                    <textarea id="description_pengajuan" rows="3" required placeholder="Jelaskan detail fasilitas yang ingin diajukan"></textarea>
+                    
+                    <label for="image_pengajuan">Unggah Foto Lokasi</label>
+                    <input type="file" id="image_pengajuan" accept="image/*" required>
+                    
+                    <button type="submit" class="btn btn-blue w-100" id="btnSubmitPengajuan">Kirim Pengajuan</button>
                 </form>
             </div>
         </div>
@@ -95,6 +95,6 @@
     </footer>
 
     <script src="js/navbar.js"></script>
-    <script src="js/report.js"></script>
+    <script src="js/request.js"></script>
 </body>
 </html>

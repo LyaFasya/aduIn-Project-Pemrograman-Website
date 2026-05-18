@@ -58,7 +58,7 @@ const getRequestById = async (req, res) => {
       include: [
         { model: User, attributes: ['id', 'name', 'email'] },
         { model: Category, attributes: ['id', 'name'] },
-        { model: FormsHistory, as: 'FormsHistories' }
+        { model: FormsHistory }
       ]
     });
 

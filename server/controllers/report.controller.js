@@ -1,7 +1,6 @@
 const { Form, User, Category, FormsHistory } = require("../models");
 const cloudinaryService = require("../services/cloudinary.service");
 
-//User Operations
 const createReport = async (req, res) => {
     try {
         const { title, description, location, category_id } = req.body;
@@ -84,6 +83,9 @@ const getReportById = async (req, res) => {
                     model: Category,
                     attributes: ["id", "name"],
                 },
+                {
+                    model: FormsHistory
+                }
             ],
         });
 
@@ -136,7 +138,6 @@ const deleteReport = async (req, res) => {
     }
 };
 
-// ADMIN OPERATIONS
 const getAdminReportDetail = async (req, res) => {
     try {
         const { id } = req.params;
@@ -276,12 +277,10 @@ const deleteSpamReport = async (req, res) => {
 };
 
 module.exports = {
-    //User Operations
     createReport,
     getAllReports,
     getReportById,
     deleteReport,
-    //Admin Operations
     getAdminReportDetail,
     updateReportStatus,
     deleteSpamReport,

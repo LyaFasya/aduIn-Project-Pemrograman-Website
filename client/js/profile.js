@@ -97,6 +97,23 @@ document.addEventListener("DOMContentLoaded", async function() {
                 formData.append("photo", photoFile);
             }
 
+            const confirmResult = await Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: "Apakah Anda yakin ingin memperbarui profil ini?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (!confirmResult.isConfirmed) {
+                btnSubmit.textContent = "Simpan Perubahan";
+                btnSubmit.disabled = false;
+                return;
+            }
+
             try {
                 const response = await fetch("http://localhost:3000/profiles", {
                     method: "PATCH",
@@ -108,11 +125,12 @@ document.addEventListener("DOMContentLoaded", async function() {
                 const result = await response.json();
 
                 if (response.ok) {
+                    Swal.fire('Berhasil!', 'Profil berhasil diperbarui.', 'success');
                     modal.style.display = "none";
                     document.getElementById("editPassword").value = "";
                     loadProfile(); 
                 } else {
-                    alert(`Gagal menyimpan: ${result.message}`);
+                    Swal.fire('Gagal', `Gagal menyimpan: ${result.message}`, 'error');
                 }
             } catch (error) {
                 console.error("Error update profile:", error);
@@ -120,24 +138,6 @@ document.addEventListener("DOMContentLoaded", async function() {
             } finally {
                 btnSubmit.textContent = "Simpan Perubahan";
                 btnSubmit.disabled = false;
-            }
-        });
-    }
-
-    const btnLogout = document.getElementById('btnLogout');
-    if (btnLogout) {
-        btnLogout.addEventListener('click', async function() {
-            try {
-                await fetch('http://localhost:3000/auth/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-            } catch (error) {
-                console.error("Logout API error:", error);
-            } finally {
-                localStorage.removeItem('aduin_token');
-                localStorage.removeItem('aduin_role');
-                window.location.href = 'login.html';
             }
         });
     }

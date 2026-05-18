@@ -8,7 +8,7 @@ const upload = require('../middlewares/upload');
 router.post('/', verifyToken, upload.single('image_url'), createRequest);
 router.get('/', verifyToken, getAllRequests);
 
-router.get('/:id', verifyToken, verifyAdmin, getRequestById);
+router.get('/:id', verifyToken, getRequestById);
 router.patch('/:id/status', verifyToken, verifyAdmin, updateRequestStatus);
 router.delete('/:id', verifyToken, deleteRequest);
 

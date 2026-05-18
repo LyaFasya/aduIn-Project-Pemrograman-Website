@@ -1,64 +1,183 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengajuan Fasilitas</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <nav class="navbar">
-        <div class="logo">AduIn</div>
-        <ul class="nav-links">
-            <li><a href="index.html" class="active">Pengajuan Fasilitas</a></li>
-            <li><a href="report.html">Pelaporan Kerusakan</a></li>
-            <li><a href="profile.html">Profil</a></li>
-        </ul>
-        <button id="btnLogout" class="btn btn-red">Keluar</button>
+        <div class="nav-left">
+            <div class="logo">aduIn</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="report.html">Pelaporan</a></li>
+                <li><a href="request.html">Pengajuan</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <div class="profile-dropdown">
+                <img src="https://placehold.co/40x40/1a1d2e/6C63FF?text=U" alt="Profile" class="nav-profile-img"
+                    id="navProfileImg" onerror="this.src='https://placehold.co/40x40/1a1d2e/6C63FF?text=U'">
+                <div class="dropdown-content">
+                    <a href="profile.html">Edit Profil</a>
+                    <a href="#" id="btnLogout" class="logout-btn">Keluar</a>
+                </div>
+            </div>
+        </div>
     </nav>
-    
-    <main class="container">
-        <div class="header-action">
-            <h2>Daftar Pengajuan Fasilitas</h2>
-            <button class="btn btn-blue" id="btnBuatPengajuan">+ Buat Pengajuan</button> 
-        </div>
 
-        <div id="pengajuanContainer" class="grid-container">
-            <p>Sedang memuat pengajuan</p>
-        </div>
+    <main class="container dashboard-main">
+        <section class="hero-section">
+            <div class="hero-text">
+                <h1 id="heroGreeting">Halo, Memuat...</h1>
+                <p>Selamat datang di aduIn. Bersama kita bangun fasilitas yang lebih baik untuk kenyamanan bersama.</p>
+            </div>
+            <div class="hero-image">
+                <img src="https://res.cloudinary.com/dwfgnubj1/image/upload/v1779041639/aduIn_-_Project_Pemrograman_Website_Sistem_Informasi_A_bpyz1j.png"
+                    alt="Gambar Indonesia">
+            </div>
+        </section>
+
+        <section class="bento-stats">
+            <div class="stat-item">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Siaga Merespon</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">🏙️</div>
+                <div class="stat-value">100+</div>
+                <div class="stat-label">Laporan Diselesaikan</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">🔒</div>
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Aman & Transparan</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">🤝</div>
+                <div class="stat-value">No. 1</div>
+                <div class="stat-label">Aplikasi Pelayanan</div>
+            </div>
+        </section>
+
+        <section id="section-pelaporan" class="dashboard-section">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-header-text">
+                        <span class="section-subtitle">- Layanan Aduan</span>
+                        <h2 class="section-title">Kamu melihat fasilitas publik disekitarmu rusak?</h2>
+                    </div>
+                    <a href="report.html" class="btn btn-red btn-pill" id="btnBuatPelaporan">LAPORKAN!!! &rarr;</a>
+                </div>
+                <div id="pelaporanContainer" class="grid-container">
+                    <p>Sedang memuat pelaporan...</p>
+                </div>
+                <div class="view-all-container" id="viewAllPelaporanContainer" style="display: none;">
+                    <a href="report.html" class="btn btn-outline" id="btnViewAllPelaporan">Lihat Semua Laporan</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-pengajuan" class="dashboard-section">
+            <div class="section-inner">
+                <div class="section-header">
+                    <div class="section-header-text">
+                        <span class="section-subtitle">- Usulan Warga</span>
+                        <h2 class="section-title">Ada usulan fasilitas baru untuk sekitarmu?</h2>
+                    </div>
+                    <a href="request.html" class="btn btn-blue btn-pill" id="btnBuatPengajuan">AJUKAN!!! &rarr;</a>
+                </div>
+                <div id="pengajuanContainer" class="grid-container">
+                    <p>Sedang memuat pengajuan...</p>
+                </div>
+                <div class="view-all-container" id="viewAllPengajuanContainer" style="display: none;">
+                    <a href="request.html" class="btn btn-outline" id="btnViewAllPengajuan">Lihat Semua Pengajuan</a>
+                </div>
+            </div>
+        </section>
 
         <div id="modalPengajuan" class="modal">
             <div class="modal-content box">
-                <span class="close-btn" id="closeModal">x</span>
+                <span class="close-btn" id="closeModalPengajuan">&times;</span>
                 <h2 style="margin-bottom: 20px;">Buat Pengajuan Baru</h2>
-                
                 <form id="formPengajuan">
-                    <label for="title">Judul Pengajuan</label>
-                    <input type="text" id="title" required placeholder="Contoh: Pembuatan Taman Bermain">
-                    
-                    <label for="location">Lokasi (Kota/Alamat)</label>
-                    <input type="text" id="location" required placeholder="Contoh: Malang">
-                    
-                    <label for="category_id">Kategori</label>
-                    <select id="category_id" required>
+                    <label for="title_pengajuan">Judul Pengajuan</label>
+                    <input type="text" id="title_pengajuan" required placeholder="Contoh: Pembuatan Taman Bermain">
+                    <label for="location_pengajuan">Lokasi (Kota/Alamat)</label>
+                    <input type="text" id="location_pengajuan" required placeholder="Contoh: Malang">
+                    <label for="category_id_pengajuan">Kategori</label>
+                    <select id="category_id_pengajuan" required>
                         <option value="">Pilih Kategori</option>
-                        <option value="1">Jalan</option>
-                        <option value="2">Penerangan Jalan</option>
-                        <option value="3">Fasilitas Umum</option>
                     </select>
-                    
-                    <label for="description">Deskripsi</label>
-                    <textarea id="description" rows="3" required placeholder="Jelaskan detail fasilitas yang ingin diajukan"></textarea>
-                    
-                    <label for="image">Unggah Foto Lokasi</label>
-                    <input type="file" id="image" accept="image/*" required>
-                    
+                    <label for="description_pengajuan">Deskripsi</label>
+                    <textarea id="description_pengajuan" rows="3" required
+                        placeholder="Jelaskan detail fasilitas yang ingin diajukan"></textarea>
+                    <label for="image_pengajuan">Unggah Foto Lokasi</label>
+                    <input type="file" id="image_pengajuan" accept="image/*" required>
                     <button type="submit" class="btn btn-blue w-100" id="btnSubmitPengajuan">Kirim Pengajuan</button>
                 </form>
             </div>
         </div>
+
+        <div id="modalPelaporan" class="modal">
+            <div class="modal-content box">
+                <span class="close-btn" id="closeModalPelaporan">&times;</span>
+                <h2 style="margin-bottom: 20px;">Buat Laporan Baru</h2>
+                <form id="formPelaporan">
+                    <label for="title_pelaporan">Judul Laporan</label>
+                    <input type="text" id="title_pelaporan" required placeholder="Contoh: Pengaduan Jalanan Berlubang">
+                    <label for="location_pelaporan">Lokasi (Kota/Alamat)</label>
+                    <input type="text" id="location_pelaporan" required placeholder="Contoh: Malang">
+                    <label for="category_id_pelaporan">Kategori</label>
+                    <select id="category_id_pelaporan" required>
+                        <option value="">-- Pilih Kategori --</option>
+                    </select>
+                    <label for="description_pelaporan">Deskripsi</label>
+                    <textarea id="description_pelaporan" rows="3" required
+                        placeholder="Jelaskan detail fasilitas yang ingin dilaporkan"></textarea>
+                    <label for="image_pelaporan">Unggah Foto Fasilitas yang Rusak</label>
+                    <input type="file" id="image_pelaporan" accept="image/*" required>
+                    <button type="submit" class="btn btn-red w-100" id="btnSubmitPelaporan">Kirim Laporan</button>
+                </form>
+            </div>
+        </div>
+        <div id="modalDetail" class="modal">
+            <div class="modal-content box">
+                <span class="close-btn" id="closeModalDetail">&times;</span>
+                <h2 style="margin-bottom: 20px;">Detail Fasilitas</h2>
+                <div class="detail-content">
+                    <img id="detailImage" src="" alt="Detail Image" class="detail-img" onerror="this.src='https://placehold.co/400x200/1a1d2e/6C63FF?text=No+Image'">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; margin-bottom: 10px;">
+                        <h3 id="detailTitle" style="margin: 0;">Memuat...</h3>
+                        <p class="text-muted" id="detailDate" style="font-size: 0.9rem; color: #888; margin: 0;"></p>
+                    </div>
+                    <p><strong>Lokasi:</strong> <span id="detailLocation">...</span></p>
+                    <p><strong>Kategori:</strong> <span id="detailCategory">...</span></p>
+                    <p style="margin-top: 10px;"><strong>Deskripsi:</strong></p>
+                    <p id="detailDescription" class="detail-desc" style="margin-top: 5px; line-height: 1.5;"></p>
+                    
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                    
+                    <h3 style="margin-bottom: 15px;">Riwayat Status Admin</h3>
+                    <div id="detailHistoryContainer" class="history-container">
+                        <p>Sedang memuat riwayat...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <script src="js/request.js"></script>
+    <footer class="main-footer">
+        <p>&copy; 2026 aduIn. Sistem Informasi Layanan Masyarakat.</p>
+    </footer>
+
+    <script src="js/navbar.js"></script>
+    <script src="js/home.js"></script>
 </body>
+
 </html>
