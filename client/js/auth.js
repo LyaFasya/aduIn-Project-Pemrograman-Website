@@ -21,22 +21,9 @@ if (loginForm) {
 
             if (response.ok) {
                 localStorage.setItem('aduin_token', result.accessToken);
-                
-                // Fetch user profile to check role
-                const profileRes = await fetch('http://localhost:3000/profiles', {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${result.accessToken}` }
-                });
-                const profileData = await profileRes.json();
-                
-                if (profileData.data && profileData.data.User) {
-                    const userRole = profileData.data.User.role;
-                    // Redirect berdasarkan role
-                    if (userRole === 'admin') {
-                        window.location.href = 'admin.html';
-                    } else {
-                        window.location.href = 'index.html';
-                    }
+                localStorage.setItem('aduin_role', result.role);
+                if (result.role === 'admin') {
+                    window.location.href = 'admin.html';
                 } else {
                     window.location.href = 'index.html';
                 }
