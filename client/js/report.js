@@ -24,18 +24,7 @@ function showToast(message, type = 'info') {
 }
 
 async function hapusPelaporan(id) {
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data pelaporan ini akan dihapus permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-    });
-
-    if (!result.isConfirmed) return;
+    if (!confirm("Apakah Anda yakin? Data pelaporan ini akan dihapus permanen!")) return;
 
     try {
         const response = await fetch(`${BASE_URL}/reports/${id}`, {
@@ -162,25 +151,14 @@ document.addEventListener("DOMContentLoaded", async function() {
             const imageFile = document.getElementById("image_pelaporan").files[0];
 
             if (!title || !location || !category_id || !description || !imageFile) {
-                Swal.fire('Peringatan', 'Harap isi semua field dan unggah gambar.', 'warning');
+                alert('Harap isi semua field dan unggah gambar.');
                 btnSubmitPelaporan.textContent = "Kirim Laporan";
                 btnSubmitPelaporan.style.backgroundColor = "";
                 btnSubmitPelaporan.disabled = false;
                 return;
             }
 
-            const confirmResult = await Swal.fire({
-                title: 'Kirim Laporan?',
-                text: "Pastikan data yang Anda masukkan sudah benar.",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Kirim!',
-                cancelButtonText: 'Batal'
-            });
-
-            if (!confirmResult.isConfirmed) {
+            if (!confirm("Pastikan data yang Anda masukkan sudah benar. Kirim laporan?")) {
                 btnSubmitPelaporan.textContent = "Kirim Laporan";
                 btnSubmitPelaporan.style.backgroundColor = "";
                 btnSubmitPelaporan.disabled = false;

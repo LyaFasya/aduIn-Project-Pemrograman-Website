@@ -325,18 +325,7 @@ async function rejectLaporanAndClose(id) {
 }
 
 async function deleteLaporan(id) {
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data pelaporan ini akan dihapus permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-    });
-
-    if (!result.isConfirmed) return;
+    if (!confirm("Apakah Anda yakin? Data pelaporan ini akan dihapus permanen!")) return;
 
     const token = localStorage.getItem('aduin_token');
 
@@ -360,18 +349,7 @@ async function deleteLaporan(id) {
 }
 
 async function deleteLaporanAndClose(id) {
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data pelaporan ini akan dihapus permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-    });
-
-    if (!result.isConfirmed) return;
+    if (!confirm("Apakah Anda yakin? Data pelaporan ini akan dihapus permanen!")) return;
 
     const token = localStorage.getItem('aduin_token');
 
@@ -594,18 +572,7 @@ async function rejectPengajuanAndClose(id) {
 }
 
 async function deletePengajuan(id) {
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data pengajuan ini akan dihapus permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-    });
-
-    if (!result.isConfirmed) return;
+    if (!confirm("Apakah Anda yakin? Data pengajuan ini akan dihapus permanen!")) return;
 
     const token = localStorage.getItem('aduin_token');
 
@@ -629,18 +596,7 @@ async function deletePengajuan(id) {
 }
 
 async function deletePengajuanAndClose(id) {
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Data pengajuan ini akan dihapus permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-    });
-
-    if (!result.isConfirmed) return;
+    if (!confirm("Apakah Anda yakin? Data pengajuan ini akan dihapus permanen!")) return;
 
     const token = localStorage.getItem('aduin_token');
 

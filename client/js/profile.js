@@ -97,18 +97,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 formData.append("photo", photoFile);
             }
 
-            const confirmResult = await Swal.fire({
-                title: 'Simpan Perubahan?',
-                text: "Apakah Anda yakin ingin memperbarui profil ini?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Simpan!',
-                cancelButtonText: 'Batal'
-            });
-
-            if (!confirmResult.isConfirmed) {
+            if (!confirm("Apakah Anda yakin ingin memperbarui profil ini?")) {
                 btnSubmit.textContent = "Simpan Perubahan";
                 btnSubmit.disabled = false;
                 return;
@@ -125,12 +114,12 @@ document.addEventListener("DOMContentLoaded", async function() {
                 const result = await response.json();
 
                 if (response.ok) {
-                    Swal.fire('Berhasil!', 'Profil berhasil diperbarui.', 'success');
+                    alert('Profil berhasil diperbarui!');
                     modal.style.display = "none";
                     document.getElementById("editPassword").value = "";
                     loadProfile(); 
                 } else {
-                    Swal.fire('Gagal', `Gagal menyimpan: ${result.message}`, 'error');
+                    alert(`Gagal menyimpan: ${result.message}`);
                 }
             } catch (error) {
                 console.error("Error update profile:", error);
