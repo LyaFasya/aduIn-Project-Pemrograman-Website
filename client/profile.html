@@ -3,18 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Saya - AduIn</title>
+    <title>Profil Saya - aduIn</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">AduIn</div>
-        <ul class="nav-links">
-            <li><a href="index.html">Pengajuan Fasilitas</a></li>
-            <li><a href="report.html">Pelaporan Kerusakan</a></li>
-            <li><a href="profile.html" class="active">Profil</a></li>
-        </ul>
-        <button id="btnLogout" class="btn btn-red">Keluar</button>
+        <div class="nav-left">
+            <div class="logo">aduIn</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="request.html">Pengajuan</a></li>
+                <li><a href="report.html">Pelaporan</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <div class="profile-dropdown">
+                <img src="https://placehold.co/40x40/1a1d2e/6C63FF?text=U" alt="Profile" class="nav-profile-img" id="navProfileImg" onerror="this.src='https://placehold.co/40x40/1a1d2e/6C63FF?text=U'">
+                <div class="dropdown-content">
+                    <a href="profile.html">Edit Profil</a>
+                    <a href="#" id="btnLogout" class="logout-btn">Keluar</a>
+                </div>
+            </div>
+        </div>
     </nav>
     
     <main class="container">
@@ -63,6 +73,7 @@
         </div>
     </main>
 
+    <script src="js/navbar.js"></script>
     <script src="js/profile.js"></script>
 </body>
 </html>

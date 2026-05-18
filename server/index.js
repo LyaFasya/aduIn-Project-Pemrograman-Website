@@ -5,24 +5,6 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 
-// const app = express();
-// const allowedOrigins = [
-//     'http://127.0.0.1:3500',
-//     'http://localhost:3500',
-//     'http://127.0.0.1:3501',
-//     'http://localhost:3501'
-// ];
-
-// app.use(cors({ 
-//     origin: (origin, callback) => {
-//         if (!origin || allowedOrigins.includes(origin)) {
-//             return callback(null, true);
-//         }
-//         return callback(new Error('Not allowed by CORS'));
-//     },
-//     credentials: true 
-// }));
-
 const app = express();
 
 app.use(cors({
@@ -35,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '../client')));
 
 const reportRoutes = require("./routes/report.route");
 const requestRoutes = require('./routes/request.route');
@@ -48,7 +31,6 @@ app.use('/auth', authRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/profiles', profileRoutes);
 
-// Handle malformed JSON bodies dari client (harus di bawah semua route)
 app.use((err, req, res, next) => {
     if (err && err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({ message: 'Invalid JSON in request body' });
@@ -61,7 +43,6 @@ const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Error handling
 server.on('error', (err) => {
     console.error('Server error:', err);
     process.exit(1);

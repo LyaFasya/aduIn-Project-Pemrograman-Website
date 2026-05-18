@@ -1,186 +1,293 @@
+const BASE_URL = 'http://localhost:3000';
 const token = localStorage.getItem('aduin_token');
+
 if (!token) {
-    alert("terdeteksi belum login atau register");
+    alert("Terdeteksi belum login atau register");
     window.location.href = 'login.html';  
 }
 
-async function hapusPengajuan(id) {
-    const yakin = confirm("Apakah Anda yakin akan menghapus pengajuan ini?");
-    
-    if (yakin) {
-        const token = localStorage.getItem('aduin_token');
-        
-        try {
-            const response = await fetch(`http://localhost:3000/requests/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+function showToast(message, type = 'info') {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
 
-            if (response.ok) {              
-                const cardDihapus = document.getElementById(`card-${id}`);
-                if (cardDihapus) cardDihapus.remove();
-                
-            } else {
-                const result = await response.json();
-                alert(`Gagal menghapus: ${result.message}`);
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+async function hapusPengajuan(id) {
+    const result = await Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data pengajuan ini akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    });
+
+    if (!result.isConfirmed) return;
+    
+    try {
+        const response = await fetch(`${BASE_URL}/requests/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {              
+            const cardDihapus = document.getElementById(`card-req-${id}`);
+            if (cardDihapus) {
+                cardDihapus.style.transition = 'opacity 0.3s, transform 0.3s';
+                cardDihapus.style.opacity = '0';
+                cardDihapus.style.transform = 'scale(0.95)';
+                setTimeout(() => cardDihapus.remove(), 300);
             }
-        } catch (error) {
-            console.error("Error delete:", error);
-            alert("terjadi kesalahan pada saat menghapus data");
+            showToast('Pengajuan berhasil dihapus', 'success');
+        } else {
+            const result = await response.json();
+            showToast(`Gagal menghapus: ${result.message}`, 'error');
         }
+    } catch (error) {
+        console.error("Error delete:", error);
+        showToast("Terjadi kesalahan pada saat menghapus data", 'error');
     }
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-    const container = document.getElementById('pengajuanContainer');
-    const btnLogout = document.getElementById('btnLogout');
-    
-    const token = localStorage.getItem('aduin_token');
-    if (!token) {
-        alert("Anda belum login, Silahkan login terlebih dahulu");
-        window.location.href = 'login.html';
-        return; 
-    }
-
-    if (btnLogout) {
-        btnLogout.addEventListener('click', function() {
-            localStorage.removeItem('aduin_token');
-            localStorage.removeItem('aduin_role');
-            window.location.href = 'login.html';
-        });
-    }
-
     try {
-        const response = await fetch('http://localhost:3000/requests', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            container.innerHTML = '';
-
-            const dataPengajuan = result.data || result; 
-
-            if(dataPengajuan.length === 0) {
-                container.innerHTML = '<p>Belum ada data pengajuan fasilitas.</p>';
-            }
-
-            dataPengajuan.forEach(item => {
-                const tanggalBagus = new Date(item.createdAt).toLocaleDateString('id-ID', {
-                    day: 'numeric', month: 'long', year: 'numeric'
+        const categoryResponse = await fetch(`${BASE_URL}/categories`);
+        const categoryResult = await categoryResponse.json();
+        if (categoryResponse.ok && categoryResult.data) {
+            const catPengajuan = document.getElementById('category_id_pengajuan');
+            if (catPengajuan) {
+                categoryResult.data.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = cat.name;
+                    catPengajuan.appendChild(option);
                 });
-
-                const cardHTML = `
-                    <div style="border: 1px solid #888; border-radius: 5px" class="card" id="card-${item.id}">
-                        <img src="${item.image_url || 'assets/placeholder.jpg'}" alt="Foto ${item.title}" class="card-img">
-                        <div class="card-body">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <span class="badge ${item.status}">${item.status.toUpperCase()}</span>
-                                <small style="color: #888;">${tanggalBagus}</small>
-                            </div>
-                            
-                            <h3 class="card-title">${item.title}</h3>
-                            <p class="card-location">${item.location}</p>
-                            <p class="card-desc" style="margin-bottom: 15px;">${item.description}</p>
-                            
-                            <div style="display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px;">
-                                <button onclick="hapusPengajuan(${item.id})" class="btn-logout" style="width: 100%; padding: 8px;">Hapus</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                container.insertAdjacentHTML('beforeend', cardHTML);
-            });
-            
-        } else {
-            if(response.status === 401 || response.status === 403) {
-                alert("Sesi Anda telah habis. Silakan login kembali.");
-                localStorage.removeItem('aduin_token');
-                localStorage.removeItem('aduin_role');
-                window.location.href = 'login.html';
-            } else {
-                container.innerHTML = `<p>tidak dapat memuat data: ${result.message}</p>`;
             }
         }
     } catch (error) {
-        console.error("terjadi kesalahan:", error);
-        container.innerHTML = `<p>tidak dapat terhubung ke server</p>`;
+        console.error('Failed to load categories:', error);
     }
 
-    const modal = document.getElementById("modalPengajuan");
-    const btnBukaModal = document.getElementById("btnBuatPengajuan");
-    const btnTutupModal = document.getElementById("closeModal");
-    const formPengajuan = document.getElementById("formPengajuan");
-    const btnSubmit = document.getElementById("btnSubmitPengajuan");
-
-    if (btnBukaModal) {
-        btnBukaModal.addEventListener("click", () => {
-            modal.style.display = "flex";
+    const pengajuanContainer = document.getElementById('pengajuanContainer');
+    try {
+        const response = await fetch(`${BASE_URL}/requests`, {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
+        const result = await response.json();
+
+        if (response.ok) {
+            pengajuanContainer.innerHTML = '';
+            const dataPengajuan = result.data || result; 
+
+            if(dataPengajuan.length === 0) {
+                pengajuanContainer.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-icon">📝</div>
+                        <h3>Belum Ada Pengajuan</h3>
+                        <p>Klik "Buat Pengajuan" untuk mengirimkan pengajuan fasilitasmu.</p>
+                    </div>`;
+            } else {
+                dataPengajuan.forEach(item => {
+                    const tanggal = new Date(item.createdAt).toLocaleDateString('id-ID', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+                    const imgSrc = item.image_url || 'https://placehold.co/400x200/1a1d2e/6C63FF?text=No+Image';
+
+                    const cardHTML = `
+                        <div class="card" id="card-req-${item.id}">
+                            <img src="${imgSrc}" alt="Foto ${item.title}" class="card-img" onerror="this.src='https://placehold.co/400x200/1a1d2e/6C63FF?text=No+Image'">
+                            <div class="card-body">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <span class="badge ${item.status || 'pending'}">${(item.status || 'pending').toUpperCase()}</span>
+                                    <small style="color: #888;">${tanggal}</small>
+                                </div>
+                                <h3 class="card-title">${item.title}</h3>
+                                <p class="card-location">${item.location}</p>
+                                <p class="card-desc" style="margin-bottom: 15px;">${item.description}</p>
+                                <div style="display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 10px;">
+                                    <button onclick="lihatDetail(${item.id}, 'req')" class="btn btn-outline" style="flex: 1;">🔍 Detail</button>
+                                    <button onclick="hapusPengajuan(${item.id})" class="btn-delete" style="flex: 1;">🗑 Hapus</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    pengajuanContainer.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            }
+        } else {
+            pengajuanContainer.innerHTML = `<p>Tidak dapat memuat data pengajuan.</p>`;
+        }
+    } catch (error) {
+        pengajuanContainer.innerHTML = `<p>Tidak dapat terhubung ke server</p>`;
     }
 
-    if (btnTutupModal) {
-        btnTutupModal.addEventListener("click", () => {
-            modal.style.display = "none";
+    const modalPengajuan = document.getElementById("modalPengajuan");
+    const btnBuatPengajuan = document.getElementById("btnBuatPengajuan");
+    const closePengajuan = document.getElementById("closeModalPengajuan");
+    const formPengajuan = document.getElementById("formPengajuan");
+    const btnSubmitPengajuan = document.getElementById("btnSubmitPengajuan");
+
+    if (btnBuatPengajuan) btnBuatPengajuan.addEventListener("click", () => modalPengajuan.style.display = "flex");
+    if (closePengajuan) {
+        closePengajuan.addEventListener("click", () => {
+            modalPengajuan.style.display = "none";
             formPengajuan.reset(); 
         });
     }
 
-    window.addEventListener("click", (event) => {
-        if (event.target === modal) {
-            modal.style.display = "none";
-            formPengajuan.reset();
-        }
-    });
-
     if (formPengajuan) {
         formPengajuan.addEventListener("submit", async function(e) {
             e.preventDefault(); 
-            btnSubmit.textContent = "Sedang diproses";
-            btnSubmit.style.backgroundColor = "#ccc";
-            btnSubmit.disabled = true;
+            btnSubmitPengajuan.textContent = "Sedang diproses";
+            btnSubmitPengajuan.style.backgroundColor = "#ccc";
+            btnSubmitPengajuan.disabled = true;
 
-            const formData = new FormData();
-            formData.append("title", document.getElementById("title").value);
-            formData.append("location", document.getElementById("location").value);
-            formData.append("category_id", document.getElementById("category_id").value);
-            formData.append("description", document.getElementById("description").value);
-            
-            const imageFile = document.getElementById("image").files[0];
-            if (imageFile) {
-                formData.append("image_url", imageFile); 
+            const title = document.getElementById("title_pengajuan").value;
+            const location = document.getElementById("location_pengajuan").value;
+            const category_id = document.getElementById("category_id_pengajuan").value;
+            const description = document.getElementById("description_pengajuan").value;
+            const imageFile = document.getElementById("image_pengajuan").files[0];
+
+            if (!title || !location || !category_id || !description || !imageFile) {
+                Swal.fire('Peringatan', 'Harap isi semua field dan unggah gambar.', 'warning');
+                btnSubmitPengajuan.textContent = "Kirim Pengajuan";
+                btnSubmitPengajuan.style.backgroundColor = "";
+                btnSubmitPengajuan.disabled = false;
+                return;
             }
 
+            const confirmResult = await Swal.fire({
+                title: 'Kirim Pengajuan?',
+                text: "Pastikan data yang Anda masukkan sudah benar.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kirim!',
+                cancelButtonText: 'Batal'
+            });
+
+            if (!confirmResult.isConfirmed) {
+                btnSubmitPengajuan.textContent = "Kirim Pengajuan";
+                btnSubmitPengajuan.style.backgroundColor = "";
+                btnSubmitPengajuan.disabled = false;
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("location", location);
+            formData.append("category_id", category_id);
+            formData.append("description", description);
+            formData.append("image_url", imageFile);
+
             try {
-                const response = await fetch("http://localhost:3000/requests", {
+                const response = await fetch(`${BASE_URL}/requests`, {
                     method: "POST",
                     headers: { "Authorization": `Bearer ${token}` },
                     body: formData
                 });
-
                 const result = await response.json();
-
                 if (response.ok) {
-                    modal.style.display = "none";
+                    modalPengajuan.style.display = "none";
                     formPengajuan.reset();
-                    window.location.reload(); 
+                    showToast('Pengajuan berhasil dikirim', 'success');
+                    setTimeout(() => window.location.reload(), 1500);
                 } else {
-                    alert(`Gagal mengirim pengajuan: ${result.message || result.error}`);
+                    showToast(`Gagal mengirim pengajuan: ${result.message || result.error}`, 'error');
                 }
             } catch (error) {
                 console.error("Error submit pengajuan:", error);
-                alert("Terjadi kesalahan jaringan saat mengirim data");
+                showToast("Terjadi kesalahan jaringan saat mengirim data", 'error');
             } finally {
-                btnSubmit.textContent = "Kirim Pengajuan";
-                btnSubmit.disabled = false;
+                btnSubmitPengajuan.textContent = "Kirim Pengajuan";
+                btnSubmitPengajuan.style.backgroundColor = "";
+                btnSubmitPengajuan.disabled = false;
             }
         });
     }
+
+    const modalDetail = document.getElementById("modalDetail");
+    const closeModalDetail = document.getElementById("closeModalDetail");
+    if (closeModalDetail) {
+        closeModalDetail.addEventListener("click", () => {
+            modalDetail.style.display = "none";
+        });
+    }
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modalPengajuan) {
+            modalPengajuan.style.display = "none";
+            if(formPengajuan) formPengajuan.reset();
+        }
+        if (event.target === modalDetail) {
+            modalDetail.style.display = "none";
+        }
+    });
+
 });
+
+window.lihatDetail = async function(id, type) {
+    const modal = document.getElementById('modalDetail');
+    const endpoint = type === 'req' ? 'requests' : 'reports';
+    
+    try {
+        const response = await fetch(`${BASE_URL}/${endpoint}/${id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const result = await response.json();
+        
+        if (response.ok) {
+            const data = result.data;
+            document.getElementById('detailImage').src = data.image_url || 'https://placehold.co/400x200/1a1d2e/6C63FF?text=No+Image';
+            document.getElementById('detailTitle').textContent = data.title;
+            document.getElementById('detailDate').textContent = new Date(data.createdAt).toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+            document.getElementById('detailLocation').textContent = data.location;
+            document.getElementById('detailCategory').textContent = data.Category?.name || data.category?.name || data.category_id || 'N/A';
+            document.getElementById('detailDescription').textContent = data.description;
+            
+            const historyContainer = document.getElementById('detailHistoryContainer');
+            historyContainer.innerHTML = '';
+            
+            if (data.FormsHistories && data.FormsHistories.length > 0) {
+                const histories = data.FormsHistories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                histories.forEach(hist => {
+                    const histDate = new Date(hist.createdAt).toLocaleString('id-ID', {
+                        day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit'
+                    });
+                    const html = `
+                        <div class="history-item">
+                            <div class="history-status badge ${hist.status}">${hist.status.toUpperCase()}</div>
+                            <div class="history-date">${histDate}</div>
+                            <div class="history-note">${hist.note || '<i>Tidak ada catatan admin</i>'}</div>
+                        </div>
+                    `;
+                    historyContainer.insertAdjacentHTML('beforeend', html);
+                });
+            } else {
+                historyContainer.innerHTML = '<p class="text-muted">Belum ada riwayat pemrosesan dari admin.</p>';
+            }
+            
+            modal.style.display = 'flex';
+        } else {
+            showToast('Gagal memuat detail', 'error');
+        }
+    } catch (error) {
+        showToast('Terjadi kesalahan jaringan', 'error');
+        console.error(error);
+    }
+};

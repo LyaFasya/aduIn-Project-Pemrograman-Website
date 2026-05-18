@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar AduIn</title>
+    <title>Daftar aduIn</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <div class="auth-wrapper">
-        <div class="auth-box box">
-            <h2>Daftar AduIn</h2>
+        <div class="auth-box">
+            <div style="text-align: center; margin-bottom: 10px;">
+                <span style="font-size: 2rem; font-weight: 800; color: var(--c-navy); letter-spacing: -1px;">aduIn<span style="color: var(--c-teal);">.</span></span>
+            </div>
+            <h2>Daftar Akun Baru</h2>
             <form id="registerForm">
                 <label for="name">Nama Lengkap</label>
                 <input type="text" id="name" required placeholder="Masukkan nama lengkap Anda">
 
                 <label for="email">Email</label>
                 <input type="email" id="email" required placeholder="Masukkan email Anda">
-                
+
                 <label for="password">Password</label>
                 <input type="password" id="password" required placeholder="Buat password Anda">
-                
+
                 <button type="submit" class="btn btn-blue w-100">Daftar Sekarang</button>
             </form>
             <p>Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
@@ -28,4 +33,5 @@
 
     <script src="js/auth.js"></script>
 </body>
+
 </html>
